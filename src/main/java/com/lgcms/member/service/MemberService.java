@@ -6,6 +6,7 @@ import com.lgcms.member.common.dto.exception.BaseException;
 import com.lgcms.member.domain.Member;
 import com.lgcms.member.domain.MemberRole;
 import com.lgcms.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,14 @@ public class MemberService {
     public MemberInfoResponse getMyInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
+        return MemberInfoResponse.toDto(member);
+    }
+
+    @Transactional
+    public MemberInfoResponse changeInfo(Long memberId, String nickname) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
+        member.setNickname(nickname);
         return MemberInfoResponse.toDto(member);
     }
 }

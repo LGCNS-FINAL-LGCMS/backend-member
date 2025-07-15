@@ -10,4 +10,9 @@ public class MemberRequest {
         String email
     ) {
     }
+
+    public record ChangeInfoRequest(
+        String nickname
+    ) {
+    }
 }
