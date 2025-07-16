@@ -1,17 +1,3 @@
-
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/member
-    username: lgcms
-    password: 1234
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    show-sql: false
-    database: postgresql
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
-server:
-  port: 8081
+  profiles:
+    default: local
