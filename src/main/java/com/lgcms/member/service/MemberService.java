@@ -1,11 +1,13 @@
 package com.lgcms.member.service;
 
+import com.lgcms.member.api.dto.MemberRequest.SignupRequest;
 import com.lgcms.member.api.dto.MemberResponse.MemberInfoResponse;
 import com.lgcms.member.api.dto.MemberResponse.SignupResponse;
 import com.lgcms.member.common.dto.exception.BaseException;
 import com.lgcms.member.domain.Member;
-import com.lgcms.member.domain.MemberRole;
+import com.lgcms.member.domain.SocialMember;
 import com.lgcms.member.repository.MemberRepository;
+import com.lgcms.member.repository.SocialMemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,19 +20,16 @@ import static com.lgcms.member.common.dto.exception.MemberError.NO_MEMBER_PRESEN
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final SocialMemberRepository socialMemberRepository;
 
-    public SignupResponse signup(String sub, String email) {
-        Optional<Member> optinoalMember = null;
-        if ((optinoalMember = memberRepository.findMemberBySub(sub)).isPresent()) {
-            return SignupResponse.toDto(true, optinoalMember.get().getId().toString());
+    @Transactional
+    public SignupResponse signup(SignupRequest request) {
+        Optional<SocialMember> optinoalSocialMember = null;
+        if ((optinoalSocialMember = socialMemberRepository.findBySubAndSocialType(request.sub(), request.socialType())).isPresent()) {
+            return SignupResponse.toDto(true, optinoalSocialMember.get().getMember().getId().toString());
         }
-        Member member = Member.builder()
-            .email(email)
-            .sub(sub)
-            .nickname(NicknameUtil.generateNickname())
-            .role(MemberRole.STUDENT)
-            .build();
-        memberRepository.save(member);
+        Member member = memberRepository.save(request.toEntity());
+        socialMemberRepository.save(request.toEntity(member));
         return SignupResponse.toDto(false, member.getId().toString());
     }
 

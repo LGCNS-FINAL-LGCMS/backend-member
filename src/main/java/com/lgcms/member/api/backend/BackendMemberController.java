@@ -24,6 +24,6 @@ public class BackendMemberController {
      */
     @PostMapping("/signup")
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest request) {
-        return ResponseEntity.ok(memberService.signup(request.sub(), request.email()));
+        return ResponseEntity.ok(memberService.signup(request));
     }
 }
