@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum MemberError implements ErrorCodeInterface {
-    MEMBER_ERROR1("먀?", "뷁", HttpStatus.BAD_GATEWAY),
+    NO_MEMBER_PRESENT("MEMBER_001", "회원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     ;
     private final String status;
     private final String message;
