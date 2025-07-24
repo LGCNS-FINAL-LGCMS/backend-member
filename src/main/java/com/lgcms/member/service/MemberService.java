@@ -46,4 +46,13 @@ public class MemberService {
         member.setNickname(nickname);
         return MemberInfoResponse.toDto(member);
     }
+
+    @Transactional
+    public Boolean signout(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
+        socialMemberRepository.deleteSocialMemberByMember(member);
+        memberRepository.delete(member);
+        return true;
+    }
 }
