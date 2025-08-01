@@ -8,6 +8,7 @@ import com.lgcms.member.domain.Member;
 import com.lgcms.member.domain.SocialMember;
 import com.lgcms.member.repository.MemberRepository;
 import com.lgcms.member.repository.SocialMemberRepository;
+import com.lgcms.member.repository.projection.MemberDbResponse.NicknameOwner;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,5 +55,13 @@ public class MemberService {
         socialMemberRepository.deleteSocialMemberByMember(member);
         memberRepository.delete(member);
         return true;
+    }
+
+    public Boolean checkUsedNickname(Long memberId, String nickname) {
+        NicknameOwner response = memberRepository.findExistNickname(nickname);
+        if (response == null || response.memberId().equals(memberId)) {
+            return true;
+        }
+        return false;
     }
 }

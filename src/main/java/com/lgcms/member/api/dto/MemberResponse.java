@@ -31,4 +31,12 @@ public class MemberResponse {
             );
         }
     }
+
+    public record NicknameCheckResponse(
+        Boolean isUsed
+    ) {
+        public static NicknameCheckResponse toEntity(Boolean isUsed) {
+            return new NicknameCheckResponse(isUsed);
+        }
+    }
 }
