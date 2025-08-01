@@ -36,4 +36,9 @@ public class MemberRequest {
         String nickname
     ) {
     }
+
+    public record NicknameCheckRequest(
+        String nickname
+    ) {
+    }
 }
