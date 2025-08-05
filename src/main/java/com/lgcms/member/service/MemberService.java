@@ -1,11 +1,13 @@
 package com.lgcms.member.service;
 
 import com.lgcms.member.api.dto.MemberRequest.SignupRequest;
+import com.lgcms.member.api.dto.MemberResponse.CategoryListResponse;
 import com.lgcms.member.api.dto.MemberResponse.MemberInfoResponse;
 import com.lgcms.member.api.dto.MemberResponse.SignupResponse;
 import com.lgcms.member.common.dto.exception.BaseException;
 import com.lgcms.member.domain.Member;
 import com.lgcms.member.domain.SocialMember;
+import com.lgcms.member.repository.CategoryRedisRepository;
 import com.lgcms.member.repository.MemberRepository;
 import com.lgcms.member.repository.SocialMemberRepository;
 import com.lgcms.member.repository.projection.MemberDbResponse.NicknameOwner;
@@ -22,6 +24,7 @@ import static com.lgcms.member.common.dto.exception.MemberError.NO_MEMBER_PRESEN
 public class MemberService {
     private final MemberRepository memberRepository;
     private final SocialMemberRepository socialMemberRepository;
+    private final CategoryRedisRepository categoryRedisRepository;
 
     @Transactional
     public SignupResponse signup(SignupRequest request) {
@@ -63,5 +66,9 @@ public class MemberService {
             return true;
         }
         return false;
+    }
+
+    public CategoryListResponse getCategoryList() {
+        return CategoryListResponse.toDto(categoryRedisRepository.getAllCategories());
     }
 }

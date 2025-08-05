@@ -2,6 +2,7 @@ package com.lgcms.member.api.open;
 
 import com.lgcms.member.api.dto.MemberRequest.ChangeInfoRequest;
 import com.lgcms.member.api.dto.MemberRequest.NicknameCheckRequest;
+import com.lgcms.member.api.dto.MemberResponse.CategoryListResponse;
 import com.lgcms.member.api.dto.MemberResponse.MemberInfoResponse;
 import com.lgcms.member.api.dto.MemberResponse.NicknameCheckResponse;
 import com.lgcms.member.common.dto.BaseResponse;
@@ -39,5 +40,10 @@ public class OpenMemberController {
         @RequestBody NicknameCheckRequest request
     ) {
         return ResponseEntity.ok(BaseResponse.ok(NicknameCheckResponse.toEntity(memberService.checkUsedNickname(memberId, request.nickname()))));
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<BaseResponse<CategoryListResponse>> getCategoryList() {
+        return ResponseEntity.ok(BaseResponse.ok(memberService.getCategoryList()));
     }
 }

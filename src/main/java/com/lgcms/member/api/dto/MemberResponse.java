@@ -1,9 +1,12 @@
 package com.lgcms.member.api.dto;
 
+import com.lgcms.member.domain.Category;
 import com.lgcms.member.domain.Member;
 import com.lgcms.member.domain.MemberRole;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberResponse {
@@ -37,6 +40,14 @@ public class MemberResponse {
     ) {
         public static NicknameCheckResponse toEntity(Boolean isUsed) {
             return new NicknameCheckResponse(isUsed);
+        }
+    }
+
+    public record CategoryListResponse(
+        List<Category> categories
+    ) {
+        public static CategoryListResponse toDto(List<Category> categories) {
+            return new CategoryListResponse(categories);
         }
     }
 }
