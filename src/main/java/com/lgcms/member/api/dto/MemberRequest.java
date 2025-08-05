@@ -1,6 +1,9 @@
 package com.lgcms.member.api.dto;
 
-import com.lgcms.member.domain.*;
+import com.lgcms.member.domain.Member;
+import com.lgcms.member.domain.MemberRole;
+import com.lgcms.member.domain.SocialMember;
+import com.lgcms.member.domain.SocialType;
 import com.lgcms.member.service.NicknameUtil;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -35,7 +38,7 @@ public class MemberRequest {
     public record ChangeInfoRequest(
         String nickname,
         @NotNull(message = "카테고리를 선택하지 않아도 빈 리스트를 입력해주세요.")
-        List<Category> categories
+        List<Long> categoryIds
     ) {
     }
 

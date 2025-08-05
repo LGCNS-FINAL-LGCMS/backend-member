@@ -51,23 +51,27 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberInfoResponse changeInfo(Long memberId, String nickname, List<Category> categories) {
+    public MemberInfoResponse changeInfo(Long memberId, String nickname, List<Long> categoryIds) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
         List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
-        if (!categories.isEmpty()) {
-            List<Long> categoryIds = categories.stream().map(Category::id).toList();
-            List<Category> categoriesById = categoryRedisRepository.getCategoriesById(categoryIds);
-            memberCategories = categoriesById.stream().map(categoryById ->
-                MemberCategory.builder().category(categoryById).member(member).build()
-            ).toList();
-            memberCategoryRepository.saveAll(memberCategories);
+        if (!categoryIds.isEmpty()) {
+            memberCategories = changeMemberCategories(categoryIds, member);
         }
         if (nickname != null) {
             checkUsedNickname(memberId, nickname);
             member.setNickname(nickname);
         }
         return MemberInfoResponse.toDto(member, memberCategories);
+    }
+
+    private List<MemberCategory> changeMemberCategories(List<Long> categoryIds, Member member) {
+        List<Category> categoriesById = categoryRedisRepository.getCategoriesById(categoryIds);
+        List<MemberCategory> memberCategories = categoriesById.stream().map(categoryById ->
+            MemberCategory.builder().category(categoryById).member(member).build()
+        ).toList();
+        member.updateCategories(memberCategories);
+        return memberCategories;
     }
 
     @Transactional
