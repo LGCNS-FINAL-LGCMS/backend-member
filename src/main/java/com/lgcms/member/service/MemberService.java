@@ -5,16 +5,20 @@ import com.lgcms.member.api.dto.MemberResponse.CategoryListResponse;
 import com.lgcms.member.api.dto.MemberResponse.MemberInfoResponse;
 import com.lgcms.member.api.dto.MemberResponse.SignupResponse;
 import com.lgcms.member.common.dto.exception.BaseException;
+import com.lgcms.member.domain.Category;
 import com.lgcms.member.domain.Member;
+import com.lgcms.member.domain.MemberCategory;
 import com.lgcms.member.domain.SocialMember;
 import com.lgcms.member.repository.CategoryRedisRepository;
+import com.lgcms.member.repository.MemberCategoryRepository;
 import com.lgcms.member.repository.MemberRepository;
 import com.lgcms.member.repository.SocialMemberRepository;
 import com.lgcms.member.repository.projection.MemberDbResponse.NicknameOwner;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.lgcms.member.common.dto.exception.MemberError.NO_MEMBER_PRESENT;
@@ -25,6 +29,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final SocialMemberRepository socialMemberRepository;
     private final CategoryRedisRepository categoryRedisRepository;
+    private final MemberCategoryRepository memberCategoryRepository;
 
     @Transactional
     public SignupResponse signup(SignupRequest request) {
@@ -37,10 +42,12 @@ public class MemberService {
         return SignupResponse.toDto(false, member.getId().toString());
     }
 
+    @Transactional(readOnly = true)
     public MemberInfoResponse getMyInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
-        return MemberInfoResponse.toDto(member);
+        List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
+        return MemberInfoResponse.toDto(member, memberCategories);
     }
 
     @Transactional
