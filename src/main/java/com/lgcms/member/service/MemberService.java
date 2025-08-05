@@ -51,11 +51,23 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberInfoResponse changeInfo(Long memberId, String nickname) {
+    public MemberInfoResponse changeInfo(Long memberId, String nickname, List<Category> categories) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
-        member.setNickname(nickname);
-        return MemberInfoResponse.toDto(member);
+        List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
+        if (!categories.isEmpty()) {
+            List<Long> categoryIds = categories.stream().map(Category::id).toList();
+            List<Category> categoriesById = categoryRedisRepository.getCategoriesById(categoryIds);
+            memberCategories = categoriesById.stream().map(categoryById ->
+                MemberCategory.builder().category(categoryById).member(member).build()
+            ).toList();
+            memberCategoryRepository.saveAll(memberCategories);
+        }
+        if (nickname != null) {
+            checkUsedNickname(memberId, nickname);
+            member.setNickname(nickname);
+        }
+        return MemberInfoResponse.toDto(member, memberCategories);
     }
 
     @Transactional

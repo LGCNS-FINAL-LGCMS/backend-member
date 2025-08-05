@@ -10,6 +10,7 @@ import com.lgcms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -29,9 +30,9 @@ public class OpenMemberController {
     @PatchMapping("/change/info")
     public ResponseEntity<BaseResponse<MemberInfoResponse>> changeInfo(
         @RequestHeader("X-USER-ID") Long memberId,
-        @RequestBody ChangeInfoRequest request
+        @Validated @RequestBody ChangeInfoRequest request
     ) {
-        return ResponseEntity.ok(BaseResponse.ok(memberService.changeInfo(memberId, request.nickname())));
+        return ResponseEntity.ok(BaseResponse.ok(memberService.changeInfo(memberId, request.nickname(), request.categories())));
     }
 
     @PostMapping("/check/nickname")
