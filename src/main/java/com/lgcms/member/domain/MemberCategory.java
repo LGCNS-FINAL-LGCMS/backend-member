@@ -16,6 +16,7 @@ public class MemberCategory {
     private Long id;
     @Embedded
     private Category category;
+    @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne
     private Member member;
 }

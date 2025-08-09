@@ -20,7 +20,7 @@ public class Member {
     private String nickname;
     @Enumerated(EnumType.STRING)
     private MemberRole role;
-    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MemberCategory> memberCategory;
     public void updateCategories(List<MemberCategory> memberCategories) {
         this.memberCategory.clear();
