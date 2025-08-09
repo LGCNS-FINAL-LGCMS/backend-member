@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/member
+    url: jdbc:postgresql://localhost:38121/member
     username: lgcms
     password: 1234
     driver-class-name: org.postgresql.Driver
@@ -12,5 +12,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 38122
+      database: 15
 server:
   port: 38109
