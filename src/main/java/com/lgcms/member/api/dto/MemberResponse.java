@@ -26,15 +26,17 @@ public class MemberResponse {
         String email,
         String nickname,
         MemberRole role,
+        Boolean getDesireLecturer,
         List<Category> categories
     ) {
-        public static MemberInfoResponse toDto(Member member, List<MemberCategory> memberCategories) {
+        public static MemberInfoResponse toDto(Member member) {
             return new MemberInfoResponse(
                 member.getId(),
                 member.getEmail(),
                 member.getNickname(),
                 member.getRole(),
-                memberCategories.stream().map(MemberCategory::getCategory).toList()
+                member.getDesireLecturer(),
+                member.getMemberCategory().stream().map(MemberCategory::getCategory).toList()
             );
         }
     }
