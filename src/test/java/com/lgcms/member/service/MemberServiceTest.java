@@ -155,7 +155,7 @@ class MemberServiceTest {
         List<Long> categoryIds = List.of(1L, 2L);
 
         // when
-        memberService.changeInfo(member.getId(), null, categoryIds);
+        memberService.changeInfo(member.getId(), null, categoryIds, false);
 
         // then
         List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
@@ -180,12 +180,12 @@ class MemberServiceTest {
         redisTemplate.opsForValue().set(categoryKeyPrefix + "2", "리액트");
         redisTemplate.opsForValue().set(categoryKeyPrefix + "3", "노드js");
 
-        memberService.changeInfo(member.getId(), null, List.of(1L, 2L));
+        memberService.changeInfo(member.getId(), null, List.of(1L, 2L), false);
 
         List<Long> categoryIds = List.of(2L, 3L);
 
         // when
-        memberService.changeInfo(member.getId(), null, categoryIds);
+        memberService.changeInfo(member.getId(), null, categoryIds, false);
 
         // then
         List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);

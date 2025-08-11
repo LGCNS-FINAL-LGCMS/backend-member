@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.lgcms.member.common.dto.exception.MemberError.DUPLICATE_NICKNAME;
 import static com.lgcms.member.common.dto.exception.MemberError.NO_MEMBER_PRESENT;
 
 @Service
@@ -51,7 +52,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberInfoResponse changeInfo(Long memberId, String nickname, List<Long> categoryIds) {
+    public MemberInfoResponse changeInfo(Long memberId, String nickname, List<Long> categoryIds, Boolean desireLecturer) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
         List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
@@ -59,9 +60,12 @@ public class MemberService {
             memberCategories = changeMemberCategories(categoryIds, member);
         }
         if (nickname != null) {
-            checkUsedNickname(memberId, nickname);
-            member.setNickname(nickname);
+            if (checkUsedNickname(memberId, nickname))
+                member.setNickname(nickname);
+            else
+                throw new BaseException(DUPLICATE_NICKNAME);
         }
+        member.setDesireLecturer(desireLecturer);
         return MemberInfoResponse.toDto(member, memberCategories);
     }
 

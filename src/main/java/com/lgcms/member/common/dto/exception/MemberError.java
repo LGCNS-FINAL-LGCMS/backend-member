@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum MemberError implements ErrorCodeInterface {
     NO_MEMBER_PRESENT("MEMBER_001", "회원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    DUPLICATE_NICKNAME("MEMBER_002", "이미 사용중인 닉네임입니다.", HttpStatus.IM_USED),
     ;
     private final String status;
     private final String message;
