@@ -101,4 +101,12 @@ public class MemberService {
         List<Member> lecturerDesirers = memberRepository.findLecturerDesirer();
         return lecturerDesirers.stream().map(MemberInfoResponse::toDto).toList();
     }
+
+    @Transactional
+    public List<MemberInfoResponse> confirmLecturer(List<Long> memberIds) {
+        List<Member> lecturerDesirers = memberRepository.findAllById(memberIds);
+        lecturerDesirers.forEach(Member::changeToLecturer);
+        //TODO 강사로 변경된 사람엑게 알림 발송 로직
+        return lecturerDesirers.stream().map(MemberInfoResponse::toDto).toList();
+    }
 }

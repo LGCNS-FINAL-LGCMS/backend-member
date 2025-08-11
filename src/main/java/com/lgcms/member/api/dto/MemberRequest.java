@@ -49,4 +49,9 @@ public class MemberRequest {
         String nickname
     ) {
     }
+
+    public record MemberIds(
+        List<Long> memberIds
+    ) {
+    }
 }

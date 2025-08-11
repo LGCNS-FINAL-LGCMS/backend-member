@@ -32,4 +32,8 @@ public class Member {
             memberCategories.forEach(memberCategory -> memberCategory.setMember(this));
         }
     }
+
+    public void changeToLecturer() {
+        this.role = MemberRole.LECTURER;
+    }
 }
