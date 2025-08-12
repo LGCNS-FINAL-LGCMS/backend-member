@@ -22,11 +22,18 @@ public class Member {
     private MemberRole role;
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MemberCategory> memberCategory;
+    @Builder.Default
+    private Boolean desireLecturer = Boolean.FALSE;
+
     public void updateCategories(List<MemberCategory> memberCategories) {
         this.memberCategory.clear();
-        if(memberCategories != null) {
+        if (memberCategories != null) {
             this.memberCategory.addAll(memberCategories);
             memberCategories.forEach(memberCategory -> memberCategory.setMember(this));
         }
+    }
+
+    public void changeToLecturer() {
+        this.role = MemberRole.LECTURER;
     }
 }

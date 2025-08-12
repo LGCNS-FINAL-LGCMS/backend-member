@@ -10,7 +10,6 @@ import com.lgcms.member.domain.Member;
 import com.lgcms.member.domain.MemberCategory;
 import com.lgcms.member.domain.SocialMember;
 import com.lgcms.member.repository.CategoryRedisRepository;
-import com.lgcms.member.repository.MemberCategoryRepository;
 import com.lgcms.member.repository.MemberRepository;
 import com.lgcms.member.repository.SocialMemberRepository;
 import com.lgcms.member.repository.projection.MemberDbResponse.NicknameOwner;
@@ -18,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.lgcms.member.common.dto.exception.MemberError.DUPLICATE_NICKNAME;
 import static com.lgcms.member.common.dto.exception.MemberError.NO_MEMBER_PRESENT;
 
 @Service
@@ -29,40 +30,41 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final SocialMemberRepository socialMemberRepository;
     private final CategoryRedisRepository categoryRedisRepository;
-    private final MemberCategoryRepository memberCategoryRepository;
 
     @Transactional
     public SignupResponse signup(SignupRequest request) {
         Optional<SocialMember> optinoalSocialMember = null;
         if ((optinoalSocialMember = socialMemberRepository.findBySubAndSocialType(request.sub(), request.socialType())).isPresent()) {
-            return SignupResponse.toDto(true, optinoalSocialMember.get().getMember().getId().toString());
+            return SignupResponse.toDto(true, optinoalSocialMember.get().getMember().getId().toString(), optinoalSocialMember.get().getMember().getRole().name());
         }
         Member member = memberRepository.save(request.toEntity());
         socialMemberRepository.save(request.toEntity(member));
-        return SignupResponse.toDto(false, member.getId().toString());
+        return SignupResponse.toDto(false, member.getId().toString(), member.getRole().name());
     }
 
     @Transactional(readOnly = true)
     public MemberInfoResponse getMyInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
-        List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
-        return MemberInfoResponse.toDto(member, memberCategories);
+        return MemberInfoResponse.toDto(member);
     }
 
     @Transactional
-    public MemberInfoResponse changeInfo(Long memberId, String nickname, List<Long> categoryIds) {
+    public MemberInfoResponse changeInfo(Long memberId, String nickname, List<Long> categoryIds, Boolean desireLecturer) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
-        List<MemberCategory> memberCategories = memberCategoryRepository.findByMember(member);
-        if (!categoryIds.isEmpty()) {
-            memberCategories = changeMemberCategories(categoryIds, member);
+        if (categoryIds == null) {
+            categoryIds = new ArrayList<>();
         }
+        changeMemberCategories(categoryIds, member);
         if (nickname != null) {
-            checkUsedNickname(memberId, nickname);
-            member.setNickname(nickname);
+            if (checkUsedNickname(memberId, nickname))
+                member.setNickname(nickname);
+            else
+                throw new BaseException(DUPLICATE_NICKNAME);
         }
-        return MemberInfoResponse.toDto(member, memberCategories);
+        member.setDesireLecturer(desireLecturer);
+        return MemberInfoResponse.toDto(member);
     }
 
     private List<MemberCategory> changeMemberCategories(List<Long> categoryIds, Member member) {
@@ -93,5 +95,18 @@ public class MemberService {
 
     public CategoryListResponse getCategoryList() {
         return CategoryListResponse.toDto(categoryRedisRepository.getAllCategories());
+    }
+
+    public List<MemberInfoResponse> getLecturerDesirer() {
+        List<Member> lecturerDesirers = memberRepository.findLecturerDesirer();
+        return lecturerDesirers.stream().map(MemberInfoResponse::toDto).toList();
+    }
+
+    @Transactional
+    public List<MemberInfoResponse> confirmLecturer(List<Long> memberIds) {
+        List<Member> lecturerDesirers = memberRepository.findAllById(memberIds);
+        lecturerDesirers.forEach(Member::changeToLecturer);
+        //TODO 강사로 변경된 사람엑게 알림 발송 로직
+        return lecturerDesirers.stream().map(MemberInfoResponse::toDto).toList();
     }
 }

@@ -5,6 +5,7 @@ import com.lgcms.member.domain.MemberRole;
 import com.lgcms.member.domain.SocialMember;
 import com.lgcms.member.domain.SocialType;
 import com.lgcms.member.service.NicknameUtil;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -36,14 +37,21 @@ public class MemberRequest {
     }
 
     public record ChangeInfoRequest(
+        @NotEmpty(message = "닉네임을 확인해주세요.")
         String nickname,
-        @NotNull(message = "카테고리를 선택하지 않아도 빈 리스트를 입력해주세요.")
-        List<Long> categoryIds
+        List<Long> categoryIds,
+        @NotNull(message = "강사 희망 여부값을 확인해주세요.")
+        Boolean desireLecturer
     ) {
     }
 
     public record NicknameCheckRequest(
         String nickname
+    ) {
+    }
+
+    public record MemberIds(
+        List<Long> memberIds
     ) {
     }
 }

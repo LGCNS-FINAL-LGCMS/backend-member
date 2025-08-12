@@ -13,10 +13,11 @@ import java.util.List;
 public class MemberResponse {
     public record SignupResponse(
         Boolean alreadyExist,
-        String memberId
+        String memberId,
+        String role
     ) {
-        public static SignupResponse toDto(Boolean alreadyExist, String memberId) {
-            return new SignupResponse(alreadyExist, memberId);
+        public static SignupResponse toDto(Boolean alreadyExist, String memberId, String role) {
+            return new SignupResponse(alreadyExist, memberId, role);
         }
     }
 
@@ -25,15 +26,17 @@ public class MemberResponse {
         String email,
         String nickname,
         MemberRole role,
+        Boolean desireLecturer,
         List<Category> categories
     ) {
-        public static MemberInfoResponse toDto(Member member, List<MemberCategory> memberCategories) {
+        public static MemberInfoResponse toDto(Member member) {
             return new MemberInfoResponse(
                 member.getId(),
                 member.getEmail(),
                 member.getNickname(),
                 member.getRole(),
-                memberCategories.stream().map(MemberCategory::getCategory).toList()
+                member.getDesireLecturer(),
+                member.getMemberCategory().stream().map(MemberCategory::getCategory).toList()
             );
         }
     }

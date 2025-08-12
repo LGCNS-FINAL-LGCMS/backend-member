@@ -32,7 +32,7 @@ public class OpenMemberController {
         @RequestHeader("X-USER-ID") Long memberId,
         @Validated @RequestBody ChangeInfoRequest request
     ) {
-        return ResponseEntity.ok(BaseResponse.ok(memberService.changeInfo(memberId, request.nickname(), request.categoryIds())));
+        return ResponseEntity.ok(BaseResponse.ok(memberService.changeInfo(memberId, request.nickname(), request.categoryIds(), request.desireLecturer())));
     }
 
     @PostMapping("/check/nickname")
