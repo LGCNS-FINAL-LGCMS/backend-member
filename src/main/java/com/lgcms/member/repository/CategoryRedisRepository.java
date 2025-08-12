@@ -23,8 +23,8 @@ public class CategoryRedisRepository {
         if (ids == null || ids.isEmpty()) {
             return List.of();
         }
-        List<Long> longIds = ids.stream().map(Long::parseLong).toList();
-        List<String> categoryNames = redisTemplate.opsForValue().multiGet(ids.stream().map(id -> keyPrefix + id).toList());
+        List<Long> longIds = ids.stream().map(idString -> Long.parseLong(idString.substring(9))).toList();
+        List<String> categoryNames = redisTemplate.opsForValue().multiGet(ids);
         return IntStream.range(0, ids.size())
             .mapToObj(i -> new Category(longIds.get(i), categoryNames.get(i)))
             .toList();
