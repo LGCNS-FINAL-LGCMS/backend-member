@@ -59,9 +59,9 @@ public class MemberService {
         changeMemberCategories(categoryIds, member);
         if (nickname != null) {
             if (checkUsedNickname(memberId, nickname))
-                member.setNickname(nickname);
-            else
                 throw new BaseException(DUPLICATE_NICKNAME);
+            else
+                member.setNickname(nickname);
         }
         member.setDesireLecturer(desireLecturer);
         return MemberInfoResponse.toDto(member);

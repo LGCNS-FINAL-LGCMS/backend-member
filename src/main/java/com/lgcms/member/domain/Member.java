@@ -3,6 +3,7 @@ package com.lgcms.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,8 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
     @OneToMany(mappedBy = "member", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<MemberCategory> memberCategory;
+    @Builder.Default
+    private List<MemberCategory> memberCategory = new ArrayList<>();
     @Builder.Default
     private Boolean desireLecturer = Boolean.FALSE;
 
