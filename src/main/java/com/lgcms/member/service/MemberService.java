@@ -88,9 +88,9 @@ public class MemberService {
     public Boolean checkUsedNickname(Long memberId, String nickname) {
         NicknameOwner response = memberRepository.findExistNickname(nickname);
         if (response == null || response.memberId().equals(memberId)) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public CategoryListResponse getCategoryList() {
