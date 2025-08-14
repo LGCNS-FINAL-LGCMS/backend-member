@@ -13,17 +13,15 @@ import java.util.List;
 public class MemberResponse {
     public record SignupResponse(
         Boolean alreadyExist,
-        String memberId,
-        String role
+        MemberInfoResponse memberInfo
     ) {
-        public static SignupResponse toDto(Boolean alreadyExist, String memberId, String role) {
-            return new SignupResponse(alreadyExist, memberId, role);
+        public static SignupResponse toDto(Boolean alreadyExist, MemberInfoResponse memberInfo) {
+            return new SignupResponse(alreadyExist, memberInfo);
         }
     }
 
     public record MemberInfoResponse(
         Long memberId,
-        String email,
         String nickname,
         MemberRole role,
         Boolean desireLecturer,
@@ -32,7 +30,6 @@ public class MemberResponse {
         public static MemberInfoResponse toDto(Member member) {
             return new MemberInfoResponse(
                 member.getId(),
-                member.getEmail(),
                 member.getNickname(),
                 member.getRole(),
                 member.getDesireLecturer(),

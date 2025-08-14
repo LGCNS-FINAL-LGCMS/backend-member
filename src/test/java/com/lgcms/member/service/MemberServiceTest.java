@@ -64,7 +64,7 @@ class MemberServiceTest {
         Boolean checkMyNickname = memberService.checkUsedNickname(oldMember.getId(), duplicateNickname);
 
         // then
-        assertThat(checkMyNickname).isTrue();
+        assertThat(checkMyNickname).isFalse();
     }
 
     @Test
@@ -88,7 +88,7 @@ class MemberServiceTest {
         Boolean checkNotDuplicatedNickname = memberService.checkUsedNickname(oldMember.getId(), notDuplicateNickname);
 
         // then
-        assertThat(checkNotDuplicatedNickname).isTrue();
+        assertThat(checkNotDuplicatedNickname).isFalse();
     }
 
     @Test
@@ -112,7 +112,7 @@ class MemberServiceTest {
         Boolean checkDuplicatedNickname = memberService.checkUsedNickname(newMember.getId(), duplicateNickname);
 
         // then
-        assertThat(checkDuplicatedNickname).isFalse();
+        assertThat(checkDuplicatedNickname).isTrue();
     }
 
     @Test
@@ -136,7 +136,7 @@ class MemberServiceTest {
         Boolean checkNotDuplicatedNewNickname = memberService.checkUsedNickname(newMember.getId(), notDuplicateNickname);
 
         // then
-        assertThat(checkNotDuplicatedNewNickname).isTrue();
+        assertThat(checkNotDuplicatedNewNickname).isFalse();
     }
 
     @Test
