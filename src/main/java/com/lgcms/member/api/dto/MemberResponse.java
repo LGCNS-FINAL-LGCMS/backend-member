@@ -22,7 +22,6 @@ public class MemberResponse {
 
     public record MemberInfoResponse(
         Long memberId,
-        String email,
         String nickname,
         MemberRole role,
         Boolean desireLecturer,
@@ -31,7 +30,6 @@ public class MemberResponse {
         public static MemberInfoResponse toDto(Member member) {
             return new MemberInfoResponse(
                 member.getId(),
-                member.getEmail(),
                 member.getNickname(),
                 member.getRole(),
                 member.getDesireLecturer(),
