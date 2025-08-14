@@ -15,23 +15,23 @@ import static com.lgcms.member.common.dto.exception.CategoryError.NO_SUCH_CATEGO
 @Component
 @RequiredArgsConstructor
 public class CategoryRedisRepository {
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> stringTemplate;
     private final String keyPrefix = "CATEGORY:";
 
     public List<Category> getAllCategories() {
-        Set<String> ids = redisTemplate.keys(keyPrefix + "*");
+        Set<String> ids = stringTemplate.keys(keyPrefix + "*");
         if (ids == null || ids.isEmpty()) {
             return List.of();
         }
         List<Long> longIds = ids.stream().map(idString -> Long.parseLong(idString.substring(9))).toList();
-        List<String> categoryNames = redisTemplate.opsForValue().multiGet(ids);
+        List<String> categoryNames = stringTemplate.opsForValue().multiGet(ids);
         return IntStream.range(0, ids.size())
             .mapToObj(i -> new Category(longIds.get(i), categoryNames.get(i)))
             .toList();
     }
 
     public List<Category> getCategoriesById(List<Long> ids) {
-        List<String> categoryNames = redisTemplate.opsForValue().multiGet(ids.stream().map(id -> keyPrefix + id).toList());
+        List<String> categoryNames = stringTemplate.opsForValue().multiGet(ids.stream().map(id -> keyPrefix + id).toList());
         if (ids.size() != categoryNames.size()) {
             throw new BaseException(NO_SUCH_CATEGORY);
         }
