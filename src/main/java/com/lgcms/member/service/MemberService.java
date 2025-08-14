@@ -35,11 +35,11 @@ public class MemberService {
     public SignupResponse signup(SignupRequest request) {
         Optional<SocialMember> optinoalSocialMember = null;
         if ((optinoalSocialMember = socialMemberRepository.findBySubAndSocialType(request.sub(), request.socialType())).isPresent()) {
-            return SignupResponse.toDto(true, optinoalSocialMember.get().getMember().getId().toString(), optinoalSocialMember.get().getMember().getRole().name());
+            return SignupResponse.toDto(true, MemberInfoResponse.toDto(optinoalSocialMember.get().getMember()));
         }
         Member member = memberRepository.save(request.toEntity());
         socialMemberRepository.save(request.toEntity(member));
-        return SignupResponse.toDto(false, member.getId().toString(), member.getRole().name());
+        return SignupResponse.toDto(false, MemberInfoResponse.toDto(member));
     }
 
     @Transactional(readOnly = true)

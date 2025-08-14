@@ -13,11 +13,10 @@ import java.util.List;
 public class MemberResponse {
     public record SignupResponse(
         Boolean alreadyExist,
-        String memberId,
-        String role
+        MemberInfoResponse memberInfo
     ) {
-        public static SignupResponse toDto(Boolean alreadyExist, String memberId, String role) {
-            return new SignupResponse(alreadyExist, memberId, role);
+        public static SignupResponse toDto(Boolean alreadyExist, MemberInfoResponse memberInfo) {
+            return new SignupResponse(alreadyExist, memberInfo);
         }
     }
 
