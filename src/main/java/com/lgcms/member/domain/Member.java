@@ -3,6 +3,7 @@ package com.lgcms.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class Member {
     private List<MemberCategory> memberCategory = new ArrayList<>();
     @Builder.Default
     private Boolean desireLecturer = Boolean.FALSE;
+    private LocalDateTime desireLecturerDate;
 
     public void updateCategories(List<MemberCategory> memberCategories) {
         this.memberCategory.clear();
@@ -37,5 +39,16 @@ public class Member {
 
     public void changeToLecturer() {
         this.role = MemberRole.LECTURER;
+    }
+
+    public void changeDesireLecturer(Boolean desireLecturer) {
+        if (this.role.equals(MemberRole.LECTURER)) {
+            this.desireLecturer = Boolean.TRUE;
+            return;
+        }
+        this.desireLecturer = desireLecturer;
+        if (desireLecturer == Boolean.TRUE && this.desireLecturer != desireLecturer) {
+            this.desireLecturerDate = LocalDateTime.now();
+        }
     }
 }
