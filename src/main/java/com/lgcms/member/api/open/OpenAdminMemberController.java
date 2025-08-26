@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@RequestMapping("/api/admin/member")
+@RequestMapping("/admin/member")
 @RestController
 @RequiredArgsConstructor
 public class OpenAdminMemberController {
