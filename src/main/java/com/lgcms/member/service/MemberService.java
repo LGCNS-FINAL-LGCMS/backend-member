@@ -63,7 +63,7 @@ public class MemberService {
             else
                 member.setNickname(nickname);
         }
-        member.setDesireLecturer(desireLecturer);
+        member.changeDesireLecturer(desireLecturer);
         return MemberInfoResponse.toDto(member);
     }
 

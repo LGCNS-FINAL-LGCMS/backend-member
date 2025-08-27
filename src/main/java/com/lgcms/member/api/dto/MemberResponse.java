@@ -7,6 +7,7 @@ import com.lgcms.member.domain.MemberRole;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,6 +26,7 @@ public class MemberResponse {
         String nickname,
         MemberRole role,
         Boolean desireLecturer,
+        LocalDateTime desireLecturerDate,
         List<Category> categories
     ) {
         public static MemberInfoResponse toDto(Member member) {
@@ -33,6 +35,7 @@ public class MemberResponse {
                 member.getNickname(),
                 member.getRole(),
                 member.getDesireLecturer(),
+                member.getDesireLecturerDate(),
                 member.getMemberCategory().stream().map(MemberCategory::getCategory).toList()
             );
         }

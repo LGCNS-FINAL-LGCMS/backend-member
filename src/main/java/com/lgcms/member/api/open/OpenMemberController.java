@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RequestMapping("/api/member")
+@RequestMapping("/member")
 @RestController
 @RequiredArgsConstructor
 public class OpenMemberController {

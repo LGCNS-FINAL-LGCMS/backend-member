@@ -22,6 +22,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
         SELECT m
         FROM Member m
         WHERE m.role = "STUDENT" AND m.desireLecturer = true
+        ORDER BY m.desireLecturerDate DESC
         """)
     List<Member> findLecturerDesirer();
 }
