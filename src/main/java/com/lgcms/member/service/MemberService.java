@@ -9,6 +9,8 @@ import com.lgcms.member.domain.Category;
 import com.lgcms.member.domain.Member;
 import com.lgcms.member.domain.MemberCategory;
 import com.lgcms.member.domain.SocialMember;
+import com.lgcms.member.event.dto.MemberInfoDto.NicknameModified;
+import com.lgcms.member.event.producer.MemberInfoEventProducer;
 import com.lgcms.member.repository.CategoryRedisRepository;
 import com.lgcms.member.repository.MemberRepository;
 import com.lgcms.member.repository.SocialMemberRepository;
@@ -30,6 +32,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final SocialMemberRepository socialMemberRepository;
     private final CategoryRedisRepository categoryRedisRepository;
+    private final MemberInfoEventProducer memberInfoEventProducer;
 
     @Transactional
     public SignupResponse signup(SignupRequest request) {
@@ -60,8 +63,10 @@ public class MemberService {
         if (nickname != null) {
             if (checkUsedNickname(memberId, nickname))
                 throw new BaseException(DUPLICATE_NICKNAME);
-            else
+            else {
                 member.setNickname(nickname);
+                memberInfoEventProducer.memberModified(NicknameModified.toDto(member));
+            }
         }
         member.changeDesireLecturer(desireLecturer);
         return MemberInfoResponse.toDto(member);
