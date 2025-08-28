@@ -9,6 +9,7 @@ import com.lgcms.member.domain.Category;
 import com.lgcms.member.domain.Member;
 import com.lgcms.member.domain.MemberCategory;
 import com.lgcms.member.domain.SocialMember;
+import com.lgcms.member.event.dto.MemberInfoDto.MemberQuited;
 import com.lgcms.member.event.dto.MemberInfoDto.NicknameModified;
 import com.lgcms.member.event.producer.MemberInfoEventProducer;
 import com.lgcms.member.repository.CategoryRedisRepository;
@@ -87,6 +88,7 @@ public class MemberService {
             .orElseThrow(() -> new BaseException(NO_MEMBER_PRESENT));
         socialMemberRepository.deleteSocialMemberByMember(member);
         memberRepository.delete(member);
+        memberInfoEventProducer.memberQuitedType(MemberQuited.toDto(member));
         return true;
     }
 

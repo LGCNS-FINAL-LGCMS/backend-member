@@ -1,6 +1,7 @@
 package com.lgcms.member.event.producer;
 
 import com.lgcms.member.common.kafka.dto.KafkaEvent;
+import com.lgcms.member.event.dto.MemberInfoDto.MemberQuited;
 import com.lgcms.member.event.dto.MemberInfoDto.NicknameModified;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,17 @@ public class MemberInfoEventProducer {
             .eventTime(LocalDateTime.now().toString())
             .eventType(nicknameModifiedType)
             .data(nicknameModified)
+            .build();
+
+        kafkaTemplate.send(memberInfoTopic, kafkaEvent);
+    }
+
+    public void memberQuitedType(MemberQuited memberQuited) {
+        KafkaEvent kafkaEvent = KafkaEvent.builder()
+            .eventId(applicationName + UUID.randomUUID().toString())
+            .eventTime(LocalDateTime.now().toString())
+            .eventType(memberQuitedType)
+            .data(memberQuited)
             .build();
 
         kafkaTemplate.send(memberInfoTopic, kafkaEvent);

@@ -13,4 +13,13 @@ public class MemberInfoDto {
             return new NicknameModified(member.getId());
         }
     }
+
+    public record MemberQuited(
+        Long memberId,
+        String nickname
+    ) {
+        public static MemberQuited toDto(Member member) {
+            return new MemberQuited(member.getId(), member.getNickname());
+        }
+    }
 }
