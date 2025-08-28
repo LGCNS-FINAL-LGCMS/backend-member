@@ -11,7 +11,9 @@ import com.lgcms.member.domain.MemberCategory;
 import com.lgcms.member.domain.SocialMember;
 import com.lgcms.member.event.dto.MemberInfoDto.MemberQuited;
 import com.lgcms.member.event.dto.MemberInfoDto.NicknameModified;
+import com.lgcms.member.event.dto.NotificationEventDto;
 import com.lgcms.member.event.producer.MemberInfoEventProducer;
+import com.lgcms.member.event.producer.NotificationEventProducer;
 import com.lgcms.member.repository.CategoryRedisRepository;
 import com.lgcms.member.repository.MemberRepository;
 import com.lgcms.member.repository.SocialMemberRepository;
@@ -34,6 +36,7 @@ public class MemberService {
     private final SocialMemberRepository socialMemberRepository;
     private final CategoryRedisRepository categoryRedisRepository;
     private final MemberInfoEventProducer memberInfoEventProducer;
+    private final NotificationEventProducer notificationEventProducer;
 
     @Transactional
     public SignupResponse signup(SignupRequest request) {
@@ -113,7 +116,9 @@ public class MemberService {
     public List<MemberInfoResponse> confirmLecturer(List<Long> memberIds) {
         List<Member> lecturerDesirers = memberRepository.findAllById(memberIds);
         lecturerDesirers.forEach(Member::changeToLecturer);
-        //TODO 강사로 변경된 사람엑게 알림 발송 로직
+        lecturerDesirers.forEach(lecturerDesirer -> {
+            notificationEventProducer.roleModified(NotificationEventDto.RoleModified.toDto(lecturerDesirer));
+        });
         return lecturerDesirers.stream().map(MemberInfoResponse::toDto).toList();
     }
 }
