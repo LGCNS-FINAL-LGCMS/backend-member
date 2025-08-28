@@ -19,7 +19,7 @@ public class MemberInfoEventProducer {
     @Value("${spring.application.name}")
     private String applicationName;
     private final String memberInfoTopic = "MEMBER_INFO";
-    private final String nicknameModifiedType = "MEMBER_MODIFIED";
+    private final String nicknameModifiedType = "NICKNAME_MODIFIED";
     private final String memberQuitedType = "MEMBER_QUITED";
 
     private final KafkaTemplate kafkaTemplate;
