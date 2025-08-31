@@ -14,10 +14,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RequestMapping("/member")
+@RequestMapping("/student/member")
 @RestController
 @RequiredArgsConstructor
-public class OpenMemberController {
+public class OpenStudentMemberController {
     private final MemberService memberService;
 
     @GetMapping
