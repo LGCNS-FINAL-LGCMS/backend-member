@@ -46,9 +46,9 @@ public class Member {
             this.desireLecturer = Boolean.TRUE;
             return;
         }
-        this.desireLecturer = desireLecturer;
         if (desireLecturer == Boolean.TRUE && this.desireLecturer != desireLecturer) {
             this.desireLecturerDate = LocalDateTime.now();
         }
+        this.desireLecturer = desireLecturer;
     }
 }
