@@ -2,7 +2,7 @@ spring:
   application:
     name: backend-member
   datasource:
-    url: jdbc:postgresql://localhost:5432/member
+    url: jdbc:postgresql://localhost:5432/testdb
     username: lgcms
     password: 1234
     driver-class-name: org.postgresql.Driver
